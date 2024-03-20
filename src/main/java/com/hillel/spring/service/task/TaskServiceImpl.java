@@ -40,7 +40,7 @@ public class TaskServiceImpl implements TaskService {
                 return updatedTask;
             }
         }
-        return null;
+    throw new IllegalArgumentException("Task not found with id: " + id);
     }
 
     public void deleteTask(Long id) {
@@ -55,7 +55,7 @@ public class TaskServiceImpl implements TaskService {
             updateTask(id, task);
             return newStatus;
         }
-        return null;
+        throw new IllegalArgumentException("Task not found with id: " + id);
     }
 
     @Override

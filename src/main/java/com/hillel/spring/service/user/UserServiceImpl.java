@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
                 return updatedUser;
             }
         }
-        return null;
+        throw new IllegalArgumentException("User not found with id: " + id);
     }
 
     @Override
@@ -89,8 +89,9 @@ public class UserServiceImpl implements UserService {
         Optional<Task> optionalTask = taskService.getTaskById(taskId);
         if (optionalTask.isPresent()) {
             Long userId = optionalTask.get().getAssignedUserId();
-            return getUserById(userId).orElse(null);
+            return getUserById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found for task with id: " + taskId));
         }
-        return null;
+        throw new IllegalArgumentException("Task not found with id: " + taskId);
     }
 }
