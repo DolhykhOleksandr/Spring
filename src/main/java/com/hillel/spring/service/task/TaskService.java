@@ -15,4 +15,6 @@ public interface TaskService {
     void deleteTask(Long id);
     TaskStatus changeStatusOfTask(Long id, TaskStatus newStatus);
     List<Task> getOrderedTask(String orderBy);
+
+    boolean taskExists(Long id);
 }
