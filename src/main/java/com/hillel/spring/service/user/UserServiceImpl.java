@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+
     @Override
     public User updateUser(Long id, User updatedUser) {
         for (int i = 0; i < users.size(); i++) {
@@ -82,6 +83,14 @@ public class UserServiceImpl implements UserService {
             }
         }
         return list;
+    }
+    public boolean userExists(Long id) {
+        for (User user : users) {
+            if (user.getId().equals(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

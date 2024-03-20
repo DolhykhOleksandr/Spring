@@ -18,7 +18,7 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getAllTasks() {
         return tasks;
     }
-@Override
+    @Override
     public Optional<Task> getTaskById(Long id) {
         return tasks.stream()
                 .filter(task -> task.getId().equals(id))
@@ -56,6 +56,14 @@ public class TaskServiceImpl implements TaskService {
             return newStatus;
         }
         throw new IllegalArgumentException("Task not found with id: " + id);
+    }
+    public boolean taskExists(Long id) {
+        for (Task task : tasks) {
+            if (task.getId().equals(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

@@ -16,5 +16,7 @@ public interface UserService {
     void assignTask(Long userId, Long taskId);
     List<Task> getTasksByUserId(Long userId);
     User getUserForTask(Long taskId);
+
+    boolean userExists(Long id);
 }
 
