@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 import java.util.List;
+import java.util.Optional;
 
 @Api(tags = "User Management")
 @RestController
@@ -33,27 +34,29 @@ public class UserController {
 
     @ApiOperation("Get user by ID")
     @GetMapping("/{id}")
-    public ResponseEntity<String> getUserById(@PathVariable Long id) {
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
         User user = userService.getUserById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
-        return ResponseEntity.ok("User found by id: " + user.toString());
+        return ResponseEntity.ok(user);
     }
+
 
     @ApiOperation("Create a new user")
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody User user) {
-        User createUser = userService.createUser(user);
-        return ResponseEntity.ok("User created successfully: " + createUser.toString());
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        User createdUser = userService.createUser(user);
+        return ResponseEntity.ok(createdUser);
     }
 
     @ApiOperation("Update an existing user")
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody User user) {
-        try {
-           User updateUser = userService.updateUser(id, user);
-            return ResponseEntity.ok("Task updated successfully: " + updateUser.toString());
-        } catch (IllegalArgumentException ex) {
-            throw new IllegalArgumentException("Task not updated with id: " + id);
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+        Optional<User> updatedUserOpt = userService.updateUser(id, user);
+        if (updatedUserOpt.isPresent()) {
+            User updatedUser = updatedUserOpt.get();
+            return ResponseEntity.ok(updatedUser);
+        } else {
+            throw new IllegalArgumentException("User not updated with id: " + id);
         }
     }
 

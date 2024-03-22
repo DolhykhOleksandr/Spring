@@ -18,6 +18,7 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getAllTasks() {
         return tasks;
     }
+
     @Override
     public Optional<Task> getTaskById(Long id) {
         return tasks.stream()
@@ -30,33 +31,36 @@ public class TaskServiceImpl implements TaskService {
         tasks.add(task);
         return task;
     }
-@Override
-    public Task updateTask(Long id, Task updatedTask) {
+
+    @Override
+    public Optional<Task> updateTask(Long id, Task updatedTask) {
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);
             if (task.getId().equals(id)) {
                 updatedTask.setId(id);
                 tasks.set(i, updatedTask);
-                return updatedTask;
+                return Optional.of(updatedTask);
             }
         }
-    throw new IllegalArgumentException("Task not found with id: " + id);
+        return Optional.empty();
     }
+
 
     public void deleteTask(Long id) {
         tasks.removeIf(task -> task.getId().equals(id));
     }
 
-    public TaskStatus changeStatusOfTask(Long id, TaskStatus newStatus) {
+    public TaskStatus changeStatusOfTask(Long id, String newStatus) {
         Optional<Task> optionalTask = getTaskById(id);
         if (optionalTask.isPresent()) {
             Task task = optionalTask.get();
             task.setStatus(newStatus);
             updateTask(id, task);
-            return newStatus;
+            return TaskStatus.valueOf(newStatus);
         }
         throw new IllegalArgumentException("Task not found with id: " + id);
     }
+
     public boolean taskExists(Long id) {
         for (Task task : tasks) {
             if (task.getId().equals(id)) {

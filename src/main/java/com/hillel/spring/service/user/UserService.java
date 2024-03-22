@@ -11,7 +11,7 @@ public interface UserService {
     List<User> getAllUsers();
     Optional<User> getUserById(Long id);
     User createUser(User user);
-    User updateUser(Long id, User user);
+    Optional<User> updateUser(Long id, User user);
     void deleteUser(Long id);
     void assignTask(Long userId, Long taskId);
     List<Task> getTasksByUserId(Long userId);

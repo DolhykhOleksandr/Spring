@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 import java.util.List;
+import java.util.Optional;
 
 @Api(tags = "Task Management")
 @RestController
@@ -33,27 +34,28 @@ public class TaskController {
 
     @ApiOperation("Get task by ID")
     @GetMapping("/{id}")
-    public ResponseEntity<String> getTaskById(@PathVariable Long id) {
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
         Task task = taskService.getTaskById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Task not found with id: " + id));
-        return ResponseEntity.ok("Task found by id: " + task.toString());
+        return ResponseEntity.ok(task);
     }
 
 
     @ApiOperation("Create a new task")
     @PostMapping
-    public ResponseEntity<String> createTask(@RequestBody Task task) {
-        Task createdTask = taskService.createTask(task);
-        return ResponseEntity.ok("Task created successfully: " + createdTask.toString());
+    public ResponseEntity<Task> createTask(@RequestBody Task task) {
+       Task createTask = taskService.createTask(task);
+        return ResponseEntity.ok(createTask);
     }
 
     @ApiOperation("Update an existing task")
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateTask(@PathVariable Long id, @RequestBody Task task) {
-        try {
-            Task updatedTask = taskService.updateTask(id, task);
-            return ResponseEntity.ok("Task updated successfully: " + updatedTask.toString());
-        } catch (IllegalArgumentException ex) {
+    public ResponseEntity<Task> updateUser(@PathVariable Long id, @RequestBody Task task) {
+        Optional<Task> updatedTaskOpt = taskService.updateTask(id, task);
+        if (updatedTaskOpt.isPresent()) {
+            Task updatedTask = updatedTaskOpt.get();
+            return ResponseEntity.ok(updatedTask);
+        } else {
             throw new IllegalArgumentException("Task not updated with id: " + id);
         }
     }

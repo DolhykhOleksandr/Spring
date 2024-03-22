@@ -11,6 +11,6 @@ public class Task {
     private String description;
     private LocalDate deadline;
     private String priority;
-    private TaskStatus status;
+    private String status;
     private Long assignedUserId;
 }
