@@ -18,12 +18,12 @@ public class UserServiceImpl implements UserService {
 
     private final List<User> users = new ArrayList<>();
     private long nextId = 1;
-
     private final TaskService taskService;
 
     public UserServiceImpl(TaskService taskService) {
         this.taskService = taskService;
     }
+
 
     @Override
     public List<User> getAllUsers() {
@@ -45,17 +45,16 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    @Override
-    public User updateUser(Long id, User updatedUser) {
+    public Optional<User> updateUser(Long id, User updatedUser) {
         for (int i = 0; i < users.size(); i++) {
             User user = users.get(i);
             if (user.getId().equals(id)) {
                 updatedUser.setId(id);
                 users.set(i, updatedUser);
-                return updatedUser;
+                return Optional.of(updatedUser);
             }
         }
-        throw new IllegalArgumentException("User not found with id: " + id);
+        return Optional.empty();
     }
 
     @Override
