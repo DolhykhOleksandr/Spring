@@ -1,6 +1,5 @@
 package com.hillel.spring.controller;
 
-import com.hillel.spring.service.CustomizedNewsService;
 import com.hillel.spring.service.NewsService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,11 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class NewsController {
 
     private final NewsService newsService;
-    private final CustomizedNewsService customizedNewsService;
 
-    public NewsController(NewsService newsService, CustomizedNewsService customizedNewsService) {
+
+    public NewsController(NewsService newsService) {
         this.newsService = newsService;
-        this.customizedNewsService = customizedNewsService;
+
     }
 
     @GetMapping("/news")
@@ -21,8 +20,4 @@ public class NewsController {
         return newsService.getNews();
     }
 
-    @GetMapping("/customized-news")
-    public Object getCustomizedNews() {
-        return customizedNewsService.getCustomizedNews();
-    }
 }
