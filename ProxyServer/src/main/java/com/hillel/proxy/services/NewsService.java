@@ -9,6 +9,7 @@ import com.kwabenaberko.newsapilib.models.request.TopHeadlinesRequest;
 import com.kwabenaberko.newsapilib.models.response.ArticleResponse;
 import com.kwabenaberko.newsapilib.models.response.SourcesResponse;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,9 +21,12 @@ import static java.lang.System.out;
 
 @Service
 public class NewsService {
-    private static final String key = "34e97cf36d514220ace2012979fcb064";
-    private final NewsApiClient newsApiClient = new NewsApiClient(key);
+    private final NewsApiClient newsApiClient;
     private static final String GLORY_MESSAGE = ", 'Glory to Ukraine!!!'";
+
+    public NewsService(@Value("${news.api.key}") String apiKey) {
+        this.newsApiClient = new NewsApiClient(apiKey);
+    }
 
     @SneakyThrows
     public List<Article> getEverything() {
