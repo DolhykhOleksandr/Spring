@@ -1,73 +1,57 @@
 package com.hillel.spring.controller;
 
+import com.hillel.spring.model.Task;
 import com.hillel.spring.model.User;
 import com.hillel.spring.service.user.UserService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+
 
 import java.util.List;
 import java.util.Optional;
-
-@Api(tags = "User Management")
 @RestController
-@RequestMapping("/api/users")
-public class UserController {
 
+@RequestMapping("/api/v1/user")
+public class UserController {
     private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @ApiOperation("Get all users")
-    @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
-        if (users.isEmpty()) {
-            throw new IllegalArgumentException("No users found");
-        } else {
-            return ResponseEntity.ok(users);
-        }
+    @PostMapping("/create")
+    public ResponseEntity<User> createUser(@RequestBody User user)  {
+        return ResponseEntity.ok(userService.createUser(user));
     }
 
-    @ApiOperation("Get user by ID")
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        User user = userService.getUserById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
-        return ResponseEntity.ok(user);
+    @DeleteMapping("/delete/{id}")
+    public void deleteUser(@PathVariable Integer id) {
+        userService.deleteUser(id);
     }
 
-
-    @ApiOperation("Create a new user")
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User createdUser = userService.createUser(user);
-        return ResponseEntity.ok(createdUser);
+    @GetMapping("/getTasks/{userId}")
+    public ResponseEntity<List<Task>> getTasksByUserId(@PathVariable Integer userId)  {
+        return ResponseEntity.ok(userService.getTasksByUserId(userId));
     }
 
-    @ApiOperation("Update an existing user")
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
-        Optional<User> updatedUserOpt = userService.updateUser(id, user);
-        if (updatedUserOpt.isPresent()) {
-            User updatedUser = updatedUserOpt.get();
-            return ResponseEntity.ok(updatedUser);
-        } else {
-            throw new IllegalArgumentException("User not updated with id: " + id);
-        }
+    @GetMapping("/getUserByTaskId/{taskId}")
+    public ResponseEntity<User> getUserForCurrentTask(@PathVariable Integer taskId)  {
+        return ResponseEntity.ok(userService.getUserForCurrentTask(taskId));
     }
 
-    @ApiOperation("Delete a user")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-        if (userService.userExists(id)) {
-            userService.deleteUser(id);
-            return ResponseEntity.ok("User deleted successfully");
-        } else {
-            throw new IllegalArgumentException("User not found with id: " + id);
-        }
+    @GetMapping("/get/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Integer id)  {
+        return ResponseEntity.ok(userService.getUserById(id));
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<User>> getUsers()  {
+        return ResponseEntity.of(Optional.ofNullable(userService.getAllUsers()));
+    }
+
+    @PostMapping("/setTask")
+    public ResponseEntity<User> setTask(@RequestBody Task task, @RequestBody User user) {
+        return ResponseEntity.ok(userService.setTaskForUser(task, user));
     }
 }
